@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :style="{ backgroundImage: 'url(/images/parrot.gif)' }">
+  <div id="app" :style="{ backgroundImage: 'url(' + path + ')' }">
     <div id="overlay"></div>
     <div class="info d-flex">
       <a href="https://cultofthepartyparrot.com/">
@@ -10,32 +10,20 @@
       </a>
     </div>
     <div id="content" class="p-3">
-      <p class="mb-0">Choose today's your lucky parrot</p>
-      <div class="parrots d-flex my-4">
-        <img
-          v-for="(src, index) in random_parrots_list"
-          :key="index"
-          class="random_parrots"
-          :src="src"
-        />
-      </div>
-      <nuxt-link
-        :to="{ path: 'result', query: { parrot: parrot_name } }"
-        class="btn btn-info btn-lg w-100"
+      <p class="mb-2">Today's your lucky parrots is..</p>
+      <h2>{{ parrot_name }}</h2>
+      <img class="my-1" alt="parrot" :src="path" />
+      <a :href="tweet_url" class="btn btn-info btn-lg w-100 my-1">Tweet</a>
+      <button
+        type="button"
+        class="btn btn-warning btn-lg w-100 mt-1"
+        @click="show_random_parrot"
       >
-        <div class="choose_btn">
-          <div>Choose</div>
-          <div>today's Parrot</div>
-        </div></nuxt-link
+        Choose parrot again
+      </button>
+      <nuxt-link to="/" class="mt-3 text-dark" @click="reset"
+        >Back to Top</nuxt-link
       >
-      <div class="parrots d-flex my-4">
-        <img
-          v-for="(src, index) in reverse_ramdom_parrots"
-          :key="index"
-          class="random_parrots"
-          :src="src"
-        />
-      </div>
     </div>
   </div>
 </template>
@@ -45,20 +33,28 @@ export default {
   name: 'App',
   data() {
     return {
-      parrotArray: '',
+      parrotArray: [],
       path: '',
       parrot_name: '',
-      random_parrots_list: [],
     }
   },
   computed: {
-    reverse_ramdom_parrots(randomParrotsList) {
-      const reverseRandomParrotsList = []
-      for (let i = 0; i <= 8; i++) {
-        reverseRandomParrotsList[i] = this.random_parrots_list[8 - i]
-      }
-      return reverseRandomParrotsList
+    tweet_url() {
+      const parrotParams = new URLSearchParams()
+      const urlParams = new URLSearchParams()
+      parrotParams.append('parrot_name', this.parrot_name)
+      parrotParams.append('path', this.path)
+      urlParams.append(
+        'text',
+        'http://localhost:3000/?' + parrotParams.toString()
+      )
+      const tweetUrl =
+        'https://twitter.com/intent/tweet?' + urlParams.toString()
+      return tweetUrl
     },
+  },
+  watch: {
+    '$route.query': 'get_parrot_from_param',
   },
   mounted() {
     this.get_all_parrot()
@@ -66,24 +62,32 @@ export default {
   methods: {
     async get_all_parrot() {
       this.parrotArray = (await (await fetch('/list.txt')).text()).split('\n')
-      const randomParrotsList = []
-      for (let i = 0; i < 9; i++) {
-        randomParrotsList.push(
-          this.parrotArray[this.get_random_int(this.parrotArray.length)]
-        )
-      }
-      this.random_parrots_list = randomParrotsList
-      this.set_random_parrot()
+      this.get_parrot_from_param()
+    },
+    show_random_parrot() {
+      this.$router.push({
+        path: 'result',
+        query: {
+          parrot: this.parrotArray[
+            this.get_random_int(this.parrotArray.length)
+          ],
+        },
+      })
+    },
+    get_parrot_from_param() {
+      const params = new URLSearchParams(this.$route.query)
+      this.parrot_name = params.get('parrot')
+      this.parrotArray.forEach((e) => {
+        if (e.includes(this.parrot_name)) this.path = e
+      })
     },
     get_random_int(max) {
       return Math.floor(Math.random() * Math.floor(max))
     },
-    set_random_parrot() {
-      const path = this.parrotArray[
-        this.get_random_int(this.parrotArray.length)
-      ]
-      this.path = path
-      this.parrot_name = path.slice(8, -4)
+    reset() {
+      this.is_selected = false
+      this.parrot_name = ''
+      this.path = ''
     },
   },
 }
