@@ -65,12 +65,13 @@ export default {
       this.get_parrot_from_param()
     },
     show_random_parrot() {
+      const path = this.parrotArray[
+        this.get_random_int(this.parrotArray.length)
+      ].slice(8, -4)
       this.$router.push({
         path: 'result',
         query: {
-          parrot: this.parrotArray[
-            this.get_random_int(this.parrotArray.length)
-          ],
+          parrot: path,
         },
       })
     },
