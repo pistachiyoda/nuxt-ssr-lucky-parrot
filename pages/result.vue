@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :style="{ backgroundImage: 'url(' + path + ')' }">
+  <div id="app" :style="{ backgroundImage: 'url(' + parrotImgPath + ')' }">
     <div id="overlay"></div>
     <div class="info d-flex">
       <a href="https://cultofthepartyparrot.com/">
@@ -11,13 +11,13 @@
     </div>
     <div id="content" class="p-3">
       <p class="mb-2">Today's your lucky parrots is..</p>
-      <h2>{{ parrot_name }}</h2>
-      <img class="my-1" alt="parrot" :src="path" />
-      <a :href="tweet_url" class="btn btn-info btn-lg w-100 my-1">Tweet</a>
+      <h2>{{ parrotName }}</h2>
+      <img class="my-1" alt="parrot" :src="parrotImgPath" />
+      <a :href="tweetUrl" class="btn btn-info btn-lg w-100 my-1">Tweet</a>
       <button
         type="button"
         class="btn btn-warning btn-lg w-100 mt-1"
-        @click="show_random_parrot"
+        @click="showRandomParrot"
       >
         Choose parrot again
       </button>
@@ -29,17 +29,25 @@
 </template>
 
 <script>
+async function getAllParrot() {
+  const parrotArray = (
+    await (
+      await fetch('https://nuxt-ssr-lucky-parrot-9vynzezsd.vercel.app/list.txt')
+    ).text()
+  ).split('\n')
+  return parrotArray
+}
+
 export default {
   name: 'App',
-  data() {
-    return {
-      parrotArray: [],
-      path: '',
-      parrot_name: '',
-    }
+  async asyncData(context) {
+    const parrotArray = await getAllParrot()
+    const parrotName = context.query.parrot
+    const parrotImgPath = parrotArray.find((e) => e.includes(parrotName))
+    return { parrotArray, parrotName, parrotImgPath }
   },
   computed: {
-    tweet_url() {
+    tweetUrl() {
       const urlParams = new URLSearchParams()
       urlParams.append(
         'text',
@@ -52,17 +60,10 @@ export default {
     },
   },
   watch: {
-    '$route.query': 'get_parrot_from_param',
-  },
-  created() {
-    this.get_all_parrot()
+    '$route.query': 'onRegenerate',
   },
   methods: {
-    async get_all_parrot() {
-      this.parrotArray = (await (await fetch('/list.txt')).text()).split('\n')
-      this.get_parrot_from_param()
-    },
-    show_random_parrot() {
+    showRandomParrot() {
       const path = this.parrotArray[
         this.get_random_int(this.parrotArray.length)
       ].slice(8, -4)
@@ -73,20 +74,19 @@ export default {
         },
       })
     },
-    get_parrot_from_param() {
-      const params = new URLSearchParams(this.$route.query)
-      this.parrot_name = params.get('parrot')
-      this.parrotArray.forEach((e) => {
-        if (e.includes(this.parrot_name)) this.path = e
-      })
+    async onRegenerate() {
+      this.parrotArray = await getAllParrot()
+      this.parrotName = this.$route.query.parrot
+      this.parrotImgPath = this.parrotArray.find((e) =>
+        e.includes(this.parrotName)
+      )
     },
     get_random_int(max) {
       return Math.floor(Math.random() * Math.floor(max))
     },
     reset() {
-      this.is_selected = false
-      this.parrot_name = ''
-      this.path = ''
+      this.parrotName = ''
+      this.parrotImgPath = ''
     },
   },
   head() {
@@ -96,20 +96,21 @@ export default {
         {
           hid: 'og:title',
           property: 'og:title',
-          content: 'Todays lucky parroto is...' + this.parrot_name + '!!',
+          content: 'Todays lucky parroto is...' + this.parrotName + '!!',
         },
         {
           hid: 'og:url',
           property: 'og:url',
           content:
-            'https://nuxt-ssr-lucky-parrot-83dqrpvcw.vercel.app/' +
+            'https://nuxt-ssr-lucky-parrot-83dqrpvcw.vercel.app' +
             this.$nuxt.$route.fullPath,
         },
         {
           hid: 'og:img',
           property: 'og:img',
           content:
-            'https://nuxt-ssr-lucky-parrot-83dqrpvcw.vercel.app/' + this.path,
+            'https://nuxt-ssr-lucky-parrot-83dqrpvcw.vercel.app' +
+            this.parrotImgPath,
         },
       ],
     }
