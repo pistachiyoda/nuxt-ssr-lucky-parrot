@@ -106,8 +106,8 @@ export default {
             this.$nuxt.$route.fullPath,
         },
         {
-          hid: 'og:img',
-          property: 'og:img',
+          hid: 'og:image',
+          property: 'og:image',
           content:
             'https://nuxt-ssr-lucky-parrot-83dqrpvcw.vercel.app' +
             this.parrotImgPath,
