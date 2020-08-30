@@ -94,6 +94,11 @@ export default {
       title: this.title,
       meta: [
         {
+          hid: 'og:title',
+          property: 'og:title',
+          content: 'Todays lucky parroto is...' + this.parrot_name + '!!',
+        },
+        {
           hid: 'og:url',
           property: 'og:url',
           content:
