@@ -32,7 +32,7 @@
 async function getAllParrot() {
   const parrotArray = (
     await (
-      await fetch('https://nuxt-ssr-lucky-parrot-9vynzezsd.vercel.app/list.txt')
+      await fetch('https://nuxt-ssr-lucky-parrot.vercel.app/list.txt')
     ).text()
   ).split('\n')
   return parrotArray
@@ -51,8 +51,7 @@ export default {
       const urlParams = new URLSearchParams()
       urlParams.append(
         'text',
-        'https://nuxt-ssr-lucky-parrot-83dqrpvcw.vercel.app' +
-          this.$nuxt.$route.fullPath
+        'https://nuxt-ssr-lucky-parrot.vercel.app' + this.$nuxt.$route.fullPath
       )
       const tweetUrl =
         'https://twitter.com/intent/tweet?' + urlParams.toString()
@@ -102,15 +101,14 @@ export default {
           hid: 'og:url',
           property: 'og:url',
           content:
-            'https://nuxt-ssr-lucky-parrot-83dqrpvcw.vercel.app' +
+            'https://nuxt-ssr-lucky-parrot.vercel.app' +
             this.$nuxt.$route.fullPath,
         },
         {
           hid: 'og:image',
           property: 'og:image',
           content:
-            'https://nuxt-ssr-lucky-parrot-83dqrpvcw.vercel.app' +
-            this.parrotImgPath,
+            'https://nuxt-ssr-lucky-parrot.vercel.app' + this.parrotImgPath,
         },
       ],
     }
