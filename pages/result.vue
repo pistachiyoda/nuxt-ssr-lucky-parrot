@@ -43,7 +43,8 @@ export default {
       const urlParams = new URLSearchParams()
       urlParams.append(
         'text',
-        'http://localhost:3000' + this.$nuxt.$route.fullPath
+        'https://nuxt-ssr-lucky-parrot-83dqrpvcw.vercel.app' +
+          this.$nuxt.$route.fullPath
       )
       const tweetUrl =
         'https://twitter.com/intent/tweet?' + urlParams.toString()
@@ -95,12 +96,15 @@ export default {
         {
           hid: 'og:url',
           property: 'og:url',
-          content: 'http://localhost:3000' + this.$nuxt.$route.fullPath,
+          content:
+            'https://nuxt-ssr-lucky-parrot-83dqrpvcw.vercel.app/' +
+            this.$nuxt.$route.fullPath,
         },
         {
           hid: 'og:img',
           property: 'og:img',
-          content: 'http://localhost:3000' + this.path,
+          content:
+            'https://nuxt-ssr-lucky-parrot-83dqrpvcw.vercel.app/' + this.path,
         },
       ],
     }
