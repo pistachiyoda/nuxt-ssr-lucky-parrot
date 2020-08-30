@@ -54,7 +54,7 @@ export default {
   watch: {
     '$route.query': 'get_parrot_from_param',
   },
-  mounted() {
+  validate() {
     this.get_all_parrot()
   },
   methods: {
