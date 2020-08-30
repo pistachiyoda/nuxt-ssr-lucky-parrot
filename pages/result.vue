@@ -40,13 +40,10 @@ export default {
   },
   computed: {
     tweet_url() {
-      const parrotParams = new URLSearchParams()
       const urlParams = new URLSearchParams()
-      parrotParams.append('parrot_name', this.parrot_name)
-      parrotParams.append('path', this.path)
       urlParams.append(
         'text',
-        'http://localhost:3000/?' + parrotParams.toString()
+        'http://localhost:3000' + this.$nuxt.$route.fullPath
       )
       const tweetUrl =
         'https://twitter.com/intent/tweet?' + urlParams.toString()
@@ -90,6 +87,23 @@ export default {
       this.parrot_name = ''
       this.path = ''
     },
+  },
+  head() {
+    return {
+      title: this.title,
+      meta: [
+        {
+          hid: 'og:url',
+          property: 'og:url',
+          content: 'http://localhost:3000' + this.$nuxt.$route.fullPath,
+        },
+        {
+          hid: 'og:img',
+          property: 'og:img',
+          content: 'http://localhost:3000' + this.path,
+        },
+      ],
+    }
   },
 }
 </script>

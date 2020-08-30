@@ -23,6 +23,8 @@ export default {
         name: 'description',
         content: process.env.npm_package_description || '',
       },
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:site', content: '@pistachiyoda' },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
