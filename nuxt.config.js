@@ -25,6 +25,18 @@ export default {
       },
       { name: 'twitter:card', content: 'summary_large_image' },
       { name: 'twitter:site', content: '@pistachiyoda' },
+      {
+        property: 'og:title',
+        content: "Today's lucky parrot",
+      },
+      {
+        property: 'og:image',
+        content: 'https://nuxt-ssr-lucky-parrot.vercel.app/top.png',
+      },
+      {
+        property: 'og:url',
+        content: 'https://nuxt-ssr-lucky-parrot.vercel.app',
+      },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
