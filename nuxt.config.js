@@ -37,6 +37,14 @@ export default {
         property: 'og:url',
         content: 'https://nuxt-ssr-lucky-parrot.vercel.app',
       },
+      {
+        property: 'og:type',
+        content: 'website',
+      },
+      {
+        property: 'og:description',
+        content: 'Let you know todays lucky parrot!',
+      },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
